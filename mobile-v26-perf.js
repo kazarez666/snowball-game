@@ -3,9 +3,10 @@
   if(!mobile) return;
   let s=window.__SNOWBALL_GAME_SRC||'';
 
-  // IMPORTANT: do not replace any visual/content creation functions here.
-  // v2.6 geometry, materials, scenery, hazards and lighting stay untouched.
-  s=s.replace("engine.setHardwareScalingLevel(Math.max(1, window.devicePixelRatio / 1.7));","engine.setHardwareScalingLevel(1.0);");
+  // IMPORTANT: keep the original prototype v2.6 visuals untouched.
+  // On Babylon, hardwareScalingLevel < 1 means a larger internal render buffer.
+  // 0.55 gives roughly 1.8x render resolution vs CSS pixels, removing the blocky iPhone look.
+  s=s.replace("engine.setHardwareScalingLevel(Math.max(1, window.devicePixelRatio / 1.7));","engine.setHardwareScalingLevel(0.55);");
   s=s.replace("scene = new BABYLON.Scene(engine);","scene = new BABYLON.Scene(engine); scene.skipPointerMovePicking=true;");
 
   // Pure performance cuts: no visual model substitutions.
@@ -28,7 +29,6 @@
       try{ bi=m.getBoundingInfo(); }catch(e){ continue; }
       if(!bi) continue;
       const ext=bi.boundingBox.extendSizeWorld;
-      // Large terrain / track surfaces must always stay enabled.
       if(ext && ext.z>120){ if(!m.isEnabled())m.setEnabled(true); continue; }
       let z;
       try{ z=m.getAbsolutePosition().z; }catch(e){ continue; }
