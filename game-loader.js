@@ -5,9 +5,15 @@
     finally{ window.__SNOWBALL_GAME_SRC=''; }
   };
   if(!mobile){ run(); return; }
-  const patch=document.createElement('script');
-  patch.src='mobile-arch-opt.js?v=3';
-  patch.onload=run;
-  patch.onerror=run;
-  document.head.appendChild(patch);
+  const arch=document.createElement('script');
+  arch.src='mobile-arch-opt.js?v=4';
+  arch.onload=()=>{
+    const visual=document.createElement('script');
+    visual.src='mobile-visual-opt.js?v=1';
+    visual.onload=run;
+    visual.onerror=run;
+    document.head.appendChild(visual);
+  };
+  arch.onerror=run;
+  document.head.appendChild(arch);
 })();
