@@ -6,7 +6,7 @@
   };
   if(!mobile){ run(); return; }
   const patch=document.createElement('script');
-  patch.src='mobile-arch-opt.js?v=2';
+  patch.src='mobile-arch-opt.js?v=3';
   patch.onload=run;
   patch.onerror=run;
   document.head.appendChild(patch);
