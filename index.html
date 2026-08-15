@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#dff5ff" />
+  <title>Снежный ком: Снеси всё — Prototype</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div id="hud">
+    <div class="pill"><span class="label">МАССА</span><b id="mass">8 кг</b></div>
+    <div id="progressWrap"><div id="progress"></div></div>
+    <div class="pill right"><span class="label">ЛУЧШАЯ</span><b id="best">0 кг</b></div>
+  </div>
+
+  <div id="powerGoal" aria-label="Текущая сила снежного кома">
+    <div class="powerHead">
+      <span id="goalLabel">СИЛА КОМА</span>
+      <span id="goalText">I · СНЕГ</span>
+    </div>
+    <div id="goalTrack"><div id="goalFill"></div></div>
+    <span id="goalNext">СЛЕДОМ: СНЕГОВИКИ</span>
+  </div>
+
+  <div id="combo" class="hidden">x2</div>
+  <div id="toast" class="hidden"></div>
+
+  <div id="tutorial" class="panel visible">
+    <div class="prototypeMark">PROTOTYPE 2.6 · BONUS FINISH + GOLD</div>
+    <div id="campaignView">
+      <h1>Горная глава</h1>
+      <p class="campaignLead">Проходи трассы, сохраняй прокачку и открывай следующую вершину.</p>
+      <div class="campaignTopline">
+        <div class="chapterProgress"><span>ГЛАВА 1</span><b id="chapterCount">0 / 10</b></div>
+        <div class="goldWallet"><span>ЗОЛОТО</span><b><span id="goldCount">0</span> 🪙</b></div>
+      </div>
+      <div class="levelGrid">
+        <button class="levelCard" id="level1Btn">
+          <span class="levelNo">УРОВЕНЬ 1</span><strong>Горная деревня</strong><small id="level1Status">ДОСТУПЕН</small>
+        </button>
+        <button class="levelCard" id="level2Btn">
+          <span class="levelNo">УРОВЕНЬ 2</span><strong>Ледяной курорт</strong><small id="level2Status">ЗАКРЫТ</small>
+        </button>
+      </div>
+      <div class="futureLevels">3–10 · скоро</div>
+      <div class="shopHead"><div><span>МАГАЗИН КОМОВ</span><small>Золото тратится только на внешний вид</small></div></div>
+      <div id="skinGrid" class="skinGrid">
+        <button class="skinCard" data-skin="classic"><span class="skinBall skinClassic"></span><strong>Классический</strong><small>БЕСПЛАТНО</small></button>
+        <button class="skinCard" data-skin="ice"><span class="skinBall skinIce"></span><strong>Ледяной</strong><small>180 🪙</small></button>
+        <button class="skinCard" data-skin="mint"><span class="skinBall skinMint"></span><strong>Мятный</strong><small>300 🪙</small></button>
+        <button class="skinCard" data-skin="berry"><span class="skinBall skinBerry"></span><strong>Ягодный</strong><small>450 🪙</small></button>
+        <button class="skinCard" data-skin="gold"><span class="skinBall skinGold"></span><strong>Золотой</strong><small>650 🪙</small></button>
+      </div>
+    </div>
+    <div id="levelBrief" class="hidden">
+      <div class="levelName" id="briefLevel">УРОВЕНЬ 1</div>
+      <h1 id="briefTitle">Горная деревня</h1>
+      <p id="briefText">Собирай снег, расти и пробивай рубежи.</p>
+      <div class="gesture">↔</div>
+      <button id="startBtn">ПОКАТИЛИСЬ</button>
+      <button id="briefBackBtn" class="secondaryBtn">← К УРОВНЯМ</button>
+    </div>
+  </div>
+
+  <div id="result" class="panel">
+    <div id="resultBadge">RUN</div>
+    <h2 id="resultTitle">СНЕСЕНО!</h2>
+    <p id="resultText"></p>
+    <div id="recordLine" class="recordLine">ЛУЧШАЯ ДИСТАНЦИЯ · 0%</div>
+    <div class="resultStats">
+      <div><span>Финальная масса</span><b id="finalMass">0 кг</b></div>
+      <div><span>Разрушено</span><b id="destroyed">0</b></div>
+      <div><span>Дистанция</span><b id="score">0%</b></div>
+    </div>
+    <div id="earnedLine" class="earnedLine">+0 ОЧКОВ УЛУЧШЕНИЯ</div>
+    <div id="goldReward" class="goldReward hidden">
+      <div><span>БАЗОВАЯ НАГРАДА</span><b id="baseGold">100 🪙</b></div>
+      <div><span>БОНУС ФИНИША</span><b id="finishMultiplier">×1</b></div>
+      <div class="goldRewardTotal"><span>ПОЛУЧЕНО СЕЙЧАС</span><b id="goldEarned">+100 🪙</b></div>
+      <small id="goldRewardNote">Лучший бонус уровня сохраняется. Золото за уже забранную ступень повторно не выдаётся.</small>
+    </div>
+    <div class="upgrades">
+      <button class="upgrade" data-upgrade="startMass"><span>Стартовый ком <small>+8 кг к старту</small></span><b><strong id="upStart">Lv.1</strong><em id="costStart">1 ОЧКО</em></b></button>
+      <button class="upgrade" data-upgrade="snowGain"><span>Сбор снега <small>+14% снега за уровень</small></span><b><strong id="upSnow">Lv.1</strong><em id="costSnow">1 ОЧКО</em></b></button>
+      <button class="upgrade" data-upgrade="impact"><span>Прочность <small>−9% потерь при обычных ударах</small></span><b><strong id="upImpact">Lv.1</strong><em id="costImpact">1 ОЧКО</em></b></button>
+    </div>
+    <div id="upgradeHint">Смертельные ловушки прокачкой не отменяются — их всё равно надо объезжать.</div>
+    <div class="resultActions"><button id="retryBtn">ЕЩЁ РАЗ →</button><button id="campaignBtn" class="secondaryBtn">К УРОВНЯМ</button></div>
+  </div>
+
+  <div id="levelHud">УРОВЕНЬ <b id="levelHudNo">1</b></div>
+  <div id="goldHud"><span>🪙</span> <b id="goldHudCount">0</b></div>
+  <div id="stars"><span>ОЧКИ</span> <b id="starCount">0</b></div>
+  <div id="errorBox" class="hidden"></div>
+
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
