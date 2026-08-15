@@ -9,7 +9,7 @@
   arch.src='mobile-arch-opt.js?v=4';
   arch.onload=()=>{
     const visual=document.createElement('script');
-    visual.src='mobile-visual-opt.js?v=1';
+    visual.src='mobile-visual-opt.js?v=2';
     visual.onload=run;
     visual.onerror=run;
     document.head.appendChild(visual);
