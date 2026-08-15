@@ -10,7 +10,13 @@
   arch.onload=()=>{
     const visual=document.createElement('script');
     visual.src='mobile-visual-opt.js?v=2';
-    visual.onload=run;
+    visual.onload=()=>{
+      const retina=document.createElement('script');
+      retina.src='mobile-retina-opt.js?v=1';
+      retina.onload=run;
+      retina.onerror=run;
+      document.head.appendChild(retina);
+    };
     visual.onerror=run;
     document.head.appendChild(visual);
   };
